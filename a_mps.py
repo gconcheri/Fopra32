@@ -3,8 +3,6 @@
 import numpy as np
 from scipy.linalg import svd
 
-### ABCDEFG
-
 
 class MPS:
     """Class for a matrix product state.
