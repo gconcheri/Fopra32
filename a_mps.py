@@ -94,7 +94,7 @@ def init_spinup_MPS(L):
     return MPS(Bs, Ss)
 
 def init_spinright_MPS(L):
-    """Return a product state with all spins up as an MPS"""
+    """Return a product state with all spins right as an MPS"""
     B = np.zeros([1, 2, 1], np.float64)
     B[0, 0, 0] = 1/np.sqrt(2)
     B[0, 1, 0] = 1/np.sqrt(2)
