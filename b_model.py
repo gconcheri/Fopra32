@@ -65,3 +65,4 @@ class TFIModel:
         """Evaluate energy E = <psi|H|psi> for the given MPS."""
         assert psi.L == self.L
         return np.sum(psi.bond_expectation_value(self.H_bonds))
+    

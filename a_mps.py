@@ -82,6 +82,14 @@ class MPS:
             assert abs(np.linalg.norm(S) - 1.) < 1.e-14
             result.append(-np.sum(S2 * np.log(S2)))
         return np.array(result)
+    
+    def correltation_function(self, psi, X, Y, i):
+        """Return the correlations <psi|X_i Y_j|psi> for all j >= i"""
+        result = [self.site_expectation_value(np.kron(X, Y)[i])] # first entry of results list, i = j 
+        for j in range(i + 1, self.L):
+            pass
+            
+        
 
 
 def init_spinup_MPS(L):
