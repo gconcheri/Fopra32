@@ -83,14 +83,18 @@ class MPS:
             result.append(-np.sum(S2 * np.log(S2)))
         return np.array(result)
     
-    def correltation_function(self, psi, X, Y, i):
-        """Return the correlations <psi|X_i Y_j|psi> for all j >= i"""
+    def correltation_function(self, X, Y, i):
+        """Return the correlations <MPS|X_i Y_j|MPS> for all j >= i"""
         result = [self.site_expectation_value(X @ Y)[i]] # first entry of results list, i = j 
+        thetax = np.tensordot(self.get_theta1(i), X, [1,1]) # vL [i] vR, i [i*]
+        left_side = np.tensordot(thetax, np.conjugate(self.get_theta1(i)), [[0,2] , [0,1]]) # [vL] vR [i], [vL*] [i*] vR*
         for j in range(i + 1, self.L):
-            
-            
-        
-
+            right_side = np.tensordot(self.Bs[j], Y, [1,1]) # vL [j] vR, j [j*]
+            right_side = np.tensordot(right_side, np.conjugate(self.Bs[j]), [[1,2], [2,1]]) # vL [vR] [j], vL* [j*] [vR*]
+            result.append(np.tensordot(left_side, right_side, [[0,1], [0,1]])) # [vR] [vR*], [vL] [vL*]
+            left_side = np.tensordot(left_side, self.Bs[j], [0, 0]) # [vR] vR*, [vL] j vR
+            left_side = np.tensordot(left_side, np.conjugate(self.Bs[j]), [[0,1], [0,1]]) # [vR*] [j] vR, [vL*] [j*] vR*
+        return result
 
 def init_spinup_MPS(L):
     """Return a product state with all spins up as an MPS"""
