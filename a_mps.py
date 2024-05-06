@@ -93,6 +93,16 @@ def init_spinup_MPS(L):
     Ss = [S.copy() for i in range(L)]
     return MPS(Bs, Ss)
 
+def init_spinright_MPS(L):
+    """Return a product state with all spins right as an MPS"""
+    B = np.zeros([1, 2, 1], np.float64)
+    B[0, 0, 0] = 1/np.sqrt(2)
+    B[0, 1, 0] = 1/np.sqrt(2)
+    S = np.ones([1], np.float64)
+    Bs = [B.copy() for i in range(L)]
+    Ss = [S.copy() for i in range(L)]
+    return MPS(Bs, Ss)
+
 
 def split_truncate_theta(theta, chi_max, eps):
     """Split and truncate a two-site wave function in mixed canonical form.
