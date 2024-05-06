@@ -85,9 +85,9 @@ class MPS:
     
     def correltation_function(self, psi, X, Y, i):
         """Return the correlations <psi|X_i Y_j|psi> for all j >= i"""
-        result = [self.site_expectation_value(np.kron(X, Y)[i])] # first entry of results list, i = j 
+        result = [self.site_expectation_value(X @ Y)[i]] # first entry of results list, i = j 
         for j in range(i + 1, self.L):
-            pass
+            
             
         
 
