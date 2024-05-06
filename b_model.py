@@ -32,9 +32,10 @@ class TFIModel:
         in short ``i j i* j*``.
     """
 
-    def __init__(self, L, J, g):
+    def __init__(self, L, J, g, h = 0):
         self.L, self.d = L, 2
         self.J, self.g = J, g
+        self.h = h
         self.sigmax = np.array([[0., 1.], [1., 0.]])
         self.sigmay = np.array([[0., -1j], [1j, 0.]])
         self.sigmaz = np.array([[1., 0.], [0., -1.]])
@@ -48,11 +49,14 @@ class TFIModel:
         H_list = []
         for i in range(self.L - 1):
             gL = gR = 0.5 * self.g
+            hL = hR = 0.5 * self.h
             if i == 0: # first bond
                 gL = self.g
+                hL = self.h
             if i + 1 == self.L - 1: # last bond
                 gR = self.g
-            H_bond = -self.J * np.kron(sx, sx) - gL * np.kron(sz, id) - gR * np.kron(id, sz)
+                hR = self.h
+            H_bond = -self.J * np.kron(sx, sx) - gL * np.kron(sz, id) - gR * np.kron(id, sz) - hL * np.kron(sx, id) - hR * np.kron(id, sx)
             # H_bond has legs ``i, j, i*, j*``
             H_list.append(np.reshape(H_bond, [d, d, d, d]))
         self.H_bonds = H_list
