@@ -52,12 +52,12 @@ def update_bond(psi, i, U_bond, chi_max, eps):
 
 
 
-def example_TEBD_gs_finite(L, J, g):
+def example_TEBD_gs_finite(L, J, g, h = 0):
     print("finite TEBD, (imaginary time evolution)")
-    print("L={L:d}, J={J:.1f}, g={g:.2f}".format(L=L, J=J, g=g))
+    print("L={L:d}, J={J:.1f}, g={g:.2f}, h={h}".format(L=L, J=J, g=g, h=h))
     import a_mps
     import b_model
-    model = b_model.TFIModel(L, J=J, g=g)
+    model = b_model.TFIModel(L, J=J, g=g, h=h)
     psi = a_mps.init_spinup_MPS(L)
     for dt in [0.1, 0.01, 0.001, 1.e-4, 1.e-5]:
         U_bonds = calc_U_bonds(model, dt)
