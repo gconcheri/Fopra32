@@ -21,6 +21,21 @@ def calc_U_bonds(model, dt):
     return U_bonds
 
 
+def calc_U_bonds_real(model, dt):
+    """Given a model, calculate ``U_bonds[i] = expm(-idt*model.H_bonds[i])``.
+
+    Each local operator has legs (i out, (i+1) out, i in, (i+1) in), in short ``i j i* j*``.
+    """
+    H_bonds = model.H_bonds
+    d = H_bonds[0].shape[0]
+    U_bonds = []
+    for H in H_bonds:
+        H = np.reshape(H, [d * d, d * d])
+        U = expm(- 1j * dt * H)
+        U_bonds.append(np.reshape(U, [d, d, d, d]))
+    return U_bonds
+
+
 def run_TEBD(psi, U_bonds, N_steps, chi_max, eps):
     """Evolve the state `psi` for `N_steps` time steps with (first order) TEBD.
 

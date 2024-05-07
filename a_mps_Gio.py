@@ -97,6 +97,14 @@ class MPS:
             result.append(np.tensordot(thirdtensor, self.Bs[j].conj(), [[2,0,1],[1,0,2]])) # [vR*] [vR] [i], [vL*] [i*] [vR*] -> vR vR*
         return result
 
+        
+
+
+
+
+
+
+
             
             
 
