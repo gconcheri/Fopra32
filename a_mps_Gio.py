@@ -88,7 +88,7 @@ class MPS:
         result = [self.site_expectation_value(X @ Y)[i]] # first entry of results list, i = j 
         #result.append(self.bond_expectation_value(np.kron(X,Y))[i]) #should be second entry as j=i+1
         theta = self.get_theta1(i)
-        op_theta = np.tensordot(X, theta, axes=[1, 1])
+        op_theta = np.tensordot(X, theta, axes=[1, 1]) # -> i vL vR
         firsttensor = np.tensordot(theta.conj(), op_theta, [[0, 1], [1, 0]]) #index 0 is vR on bottom, index 1 vR on top - vR* vR
         for j in range(i + 1, self.L):
             secondtensor = np.tensordot(firsttensor, self.Bs[j], [1,0]) # vR* [vR], [vL] i vR -> vR* i vR
@@ -96,22 +96,6 @@ class MPS:
             thirdtensor = np.tensordot(secondtensor, Y, [1,1]) # vR* [i] vR, i [i*]
             result.append(np.tensordot(thirdtensor, self.Bs[j].conj(), [[2,0,1],[1,0,2]])) # [vR*] [vR] [i], [vL*] [i*] [vR*] -> vR vR*
         return result
-
-        
-
-
-
-
-
-
-
-            
-            
-
-            
-            
-        
-
 
 def init_spinup_MPS(L):
     """Return a product state with all spins up as an MPS"""
