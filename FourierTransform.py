@@ -3,74 +3,6 @@ import matplotlib.pyplot as plt
 
 
 
-# Fourier transform the time-domain and space-domain with windowing function cos(pi/2 * t/T)**nw
-# I built this function to manually do both fourier transforms, 
-# check code if it does proper shifting by uncommenting
-
-def FT_different(Ct, t_list, x_list, nw=4):
-    """
-    full complex data as input. 
-    data only for positive time.
-    """
-    #Ct will now be matrix X x T
-    
-    n = len(t_list)
-    Wfunlist = [np.cos(np.pi*t_list[t]/(2*t_list[-1]))**nw  for t in range(n)]
-    a,b = Ct.shape 
-    input_list = np.zeros((a,b), dtype = np.complex128)
-    FTresult_t = np.zeros((a,b), dtype = np.complex128)
-    FTresult = np.zeros((a,b), dtype = np.complex128)
-
-    for i in range(a):
-        input_list[i,:] = Wfunlist[:] * (np.array(Ct[i,:]))
-        FTresult_t[i,:] = np.fft.fft(input_list[i,:])
-
-    # freq_w = 2 * np.pi * np.fft.fftfreq(n, t_list[1]-t_list[0])
-    # freq_w = np.fft.fftshift(freq_w)
-    # for i in range(a):
-    #     FTresult[i,:] = np.fft.fftshift(FTresult[i,:])
-
-    for j in range(b):
-        FTresult[:,j] = np.fft.fft(FTresult_t[:,j])
-    
-    # freq_k = 2 * np.pi * np.fft.fftfreq(n, x_list[1]-x_list[0])
-    # freq_k = np.fft.fftshift(freq_k)
-
-#     for j in range(b):
-#         FTresult[:,j] = np.fft.fftshift(FTresult[:,j])
-    
-    return FTresult
-
-
-
-# Fourier transform the time-domain and space-domain with windowing function cos(pi/2 * t/T)**nw using Scipy built-in function
-#and no shifting!
-
-import scipy.fft as fft
-
-def FT(Ct, t_list, x_list, nw=4):
-    """
-    full complex data as input. 
-    data only for positive time.
-    """
-    #Ct will now be matrix X x T
-    
-    n = len(t_list)
-    Wfunlist = [np.cos(np.pi*t_list[t]/(2*t_list[-1]))**nw  for t in range(n)]
-    a,b = Ct.shape 
-    input_list = np.zeros((a,b), dtype = np.complex128)
-    FTresult = np.zeros((a,b), dtype = np.complex128)
-
-    for i in range(a):
-        input_list[i,:] = Wfunlist[:] * (np.array(Ct[i,:]))
-    
-    FTresult = fft.fft2(input_list)
-    #FTresult = fft.fftshift(FTresult)
-    return FTresult
-
-
-
-
 #Markus Drescher genius FT ahah
 
 def fourier_time(t_series, dt, sigma = 0.4, nw=4, gauss = True):
@@ -163,12 +95,13 @@ def get_Swk(corrs, L, dt = 1e-2): #corrs as T x X matrix as input
 
     return Swk, momenta, freqs
 
-def plot_Swk(Swk, momenta, freqs, g = 2., J = 1., interval = 20, fig = (8,4), interp = False):
+def plot_Swk(Swk, momenta, freqs, title, offset = 20, interval = 20, fig = (8,4)):
     plt.figure(figsize=fig)
     W, K = Swk.shape
 
     index = int(np.where(freqs == 0)[0])
     print(index)
+    index = index + offset
 
     delta_K = (momenta[1]-momenta[0])/2
     K_min = momenta[0]-delta_K
@@ -200,21 +133,11 @@ def plot_Swk(Swk, momenta, freqs, g = 2., J = 1., interval = 20, fig = (8,4), in
             )
 
 
-    omega = 2*g - 2 * J * np.cos(momenta)  # The dispersion relation
-    plt.plot(momenta, omega, color='yellow', linestyle='dotted', linewidth=1.5, label='dispersion relation E(k)')
-
     plt.colorbar(fraction=0.046, pad=0.04)
-    if interp == True:
-        plt.title(r'abs ED $Cs(\omega,k)$')
-    else:
-        plt.title(r'abs ID $Cs(\omega,k)$')
-
-    plt.xlim(momenta[0], momenta[-1])
-
+    #plt.xlim(momenta[0], momenta[-1])
     plt.xlabel('momentum k')
     plt.ylabel(r'frequency $\omega$')
-
-    plt.xticks(momenta)
+    plt.title(title)
 
     plt.legend()
     plt.plot()
